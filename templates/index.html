@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fake News Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="header">
+        <h1>AI Fake News Detector</h1>
+        <p class="subtitle">
+          Paste a news article below and let the model predict whether it is
+          <strong>REAL</strong> or <strong>FAKE</strong>.
+        </p>
+      </header>
+
+      <main class="main">
+        <form method="POST" class="form">
+          <label for="news_text" class="label">News article text</label>
+          <textarea
+            id="news_text"
+            name="news_text"
+            class="textarea"
+            rows="10"
+            placeholder="Paste or type a news article here..."
+          >{{ user_text or "" }}</textarea>
+
+          <button type="submit" class="button">Analyze</button>
+        </form>
+
+        {% if error_message %}
+        <div class="alert alert-error">
+          {{ error_message }}
+        </div>
+        {% endif %}
+
+        {% if prediction %}
+        <section class="result">
+          <h2>Result</h2>
+          <div class="result-grid">
+            <div class="result-item">
+              <span class="result-label">Prediction</span>
+              <span
+                class="result-value {% if prediction == 'FAKE' %}fake{% else %}real{% endif %}"
+              >
+                {{ prediction }}
+              </span>
+            </div>
+
+            <div class="result-item">
+              <span class="result-label">Confidence</span>
+              <span class="result-value">
+                {{ "%.2f"|format(confidence or 0.0) }}%
+              </span>
+            </div>
+          </div>
+
+          {% if summary %}
+          <div class="summary">
+            <h3>Short Summary</h3>
+            <p>{{ summary }}</p>
+          </div>
+          {% endif %}
+        </section>
+        {% endif %}
+      </main>
+
+      <footer class="footer">
+        <p>Demo project · Logistic Regression + TF‑IDF · Flask</p>
+      </footer>
+    </div>
+  </body>
+</html>
+
